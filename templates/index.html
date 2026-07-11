@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Car Billing System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Car Billing System</h1>
+
+    <form action="/" method="POST">
+
+        <label>Select Car Model</label>
+
+        <select name="car">
+
+            {% for car in cars %}
+
+                <option value="{{ car }}"
+                {% if car == selected_car %}selected{% endif %}>
+                    {{ car }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <label>Dealer Discount</label>
+
+        <input
+            type="text"
+            name="discount"
+            placeholder="Example: 2% or 20000"
+            value="{{ discount if discount else '' }}">
+
+        <label>Insurance</label>
+
+        <select name="insurance">
+
+            <option value="Yes"
+            {% if insurance=="Yes" %}selected{% endif %}>
+                Yes
+            </option>
+
+            <option value="No"
+            {% if insurance=="No" %}selected{% endif %}>
+                No
+            </option>
+
+        </select>
+
+        <label>Additional Accessories</label>
+
+        <select name="accessories">
+
+            <option value="Yes"
+            {% if accessories=="Yes" %}selected{% endif %}>
+                Yes
+            </option>
+
+            <option value="No"
+            {% if accessories=="No" %}selected{% endif %}>
+                No
+            </option>
+
+        </select>
+
+        <button type="submit">
+            Calculate Bill
+        </button>
+
+    </form>
+
+    {% if error %}
+
+    <div class="error">
+
+        {{ error }}
+
+    </div>
+
+    {% endif %}
+
+    {% if selected_car %}
+
+    <div class="result">
+
+        <h2>Billing Details</h2>
+
+        <div class="row">
+            <span>Selected Car</span>
+            <span class="amount">{{ selected_car }}</span>
+        </div>
+
+        <div class="row">
+            <span>Showroom Price</span>
+            <span class="amount">₹{{ "%.0f"|format(showroom_price) }}</span>
+        </div>
+
+        <div class="row">
+            <span>RTO Charges</span>
+            <span class="amount">₹{{ "%.0f"|format(rto) }}</span>
+        </div>
+
+        <div class="row">
+            <span>Insurance</span>
+            <span class="amount">
+                {{ insurance }}
+                (₹{{ "%.0f"|format(insurance_cost) }})
+            </span>
+        </div>
+
+        <div class="row">
+            <span>Accessories</span>
+            <span class="amount">
+                {{ accessories }}
+                (₹{{ "%.0f"|format(accessories_cost) }})
+            </span>
+        </div>
+
+        <div class="row">
+            <span>TCS Charges</span>
+            <span class="amount">₹{{ "%.0f"|format(tcs) }}</span>
+        </div>
+
+        <div class="row">
+            <span>Dealer Discount</span>
+            <span class="amount">
+                {{ discount if discount else "No Discount" }}
+            </span>
+        </div>
+
+        <div class="row">
+            <span>Discount Amount</span>
+            <span class="amount">
+                ₹{{ "%.0f"|format(discount_amount) }}
+            </span>
+        </div>
+
+        <div class="total">
+
+            Total Amount Payable
+
+            <br><br>
+
+            ₹{{ "%.0f"|format(final_price) if final_price is not none else "0" }}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
